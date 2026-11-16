@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080d0b">
+<title>PS5 Performance Lab</title>
+<style>
+:root{--bg:#080d0b;--panel:#101a15;--panel2:#14221a;--line:#244331;--green:#8dff9d;--muted:#a4b7aa;--white:#eff8f0;--red:#ff7777;--yellow:#ffd477}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 85% 0%,#183324 0,transparent 42%),var(--bg);color:var(--white);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{padding:28px 18px 18px;max-width:1050px;margin:auto} .eyebrow{color:var(--green);font-size:11px;font-weight:800;letter-spacing:.2em}
+h1{font-size:clamp(30px,6vw,48px);line-height:1.05;margin:8px 0}header p{color:var(--muted);max-width:720px;margin:10px 0}
+main{max-width:1050px;margin:auto;padding:0 18px 48px}.warning{border:1px solid #6b5324;background:#241d10;color:#ffe2a2;border-radius:12px;padding:13px 15px;margin:12px 0 20px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.tab,button{border:1px solid var(--line);background:#132219;color:var(--white);border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}.tab.active,button.primary{background:var(--green);color:#07120a;border-color:var(--green)}button:hover,.tab:hover{filter:brightness(1.12)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}.card{background:linear-gradient(145deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px}.card h2{font-size:19px;margin:0 0 10px}.card h3{font-size:15px;margin:0 0 8px;color:var(--green)}
+label{display:block;color:var(--muted);font-size:13px;margin:12px 0 5px}select,input,textarea{width:100%;background:#080f0b;border:1px solid #31513c;border-radius:9px;color:var(--white);padding:11px;font:inherit}textarea{min-height:180px;resize:vertical;font-family:ui-monospace,monospace;font-size:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row>*{flex:1}.muted{color:var(--muted)}.pill{display:inline-block;padding:3px 8px;border-radius:99px;font-size:11px;font-weight:800;background:#183b25;color:var(--green)}.pill.warn{background:#382b13;color:var(--yellow)}.pill.no{background:#3b1c1c;color:#ffaaaa}
+ul{padding-left:20px;color:var(--muted)}li{margin:6px 0}.output{white-space:pre-wrap;word-break:break-word;background:#070c09;border:1px solid var(--line);border-radius:10px;padding:12px;color:#c7f5ce;font:12px/1.5 ui-monospace,monospace;max-height:280px;overflow:auto}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.actions button{flex:1;min-width:130px}.hidden{display:none}.check{display:flex;align-items:center;gap:9px;color:var(--muted);margin:9px 0}.check input{width:auto;accent-color:var(--green)}footer{color:#789080;text-align:center;padding:20px;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+ <div class="eyebrow">CONSOLE TOOLKIT / VERSION 1.0</div>
+ <h1>PS5 <span style="color:var(--green)">PERFORMANCE LAB</span></h1>
+ <p>Build gaming profiles, edit configuration templates, and get practical console settings. Works as a standalone page in modern browsers.</p>
+</header>
+<main>
+ <div class="warning"><b>Compatibility note:</b> Retail PS5 Roblox and Fortnite do not import custom FFlags, PC config files, or website-generated tweaks. This tool generates reference/export files and PS5 setup guidance; it does not unlock FPS, inject flags, or modify game files.</div>
+ <nav class="tabs">
+  <button class="tab active" data-tab="ps5">PS5 settings</button>
+  <button class="tab" data-tab="roblox">Roblox FFlag builder</button>
+  <button class="tab" data-tab="fortnite">Fortnite potato profile</button>
+ </nav>
+
+ <section id="ps5" class="pane">
+  <div class="grid">
+   <div class="card"><h2>Console performance</h2>
+    <label for="display">Display capability</label><select id="display"><option>120Hz display</option><option>60Hz display</option><option>Not sure</option></select>
+    <label for="priority">Priority</label><select id="priority"><option>Competitive / lowest practical latency</option><option>Balanced</option><option>Visual quality</option></select>
+    <label class="check"><input type="checkbox" id="vrr"> My display supports VRR</label>
+    <label class="check"><input type="checkbox" id="lan"> I can use wired Ethernet</label>
+    <button class="primary" id="makeGuide">Generate PS5 setup guide</button>
+   </div>
+   <div class="card"><h2>Recommended settings</h2><div id="guide" class="muted">Choose your display and priority, then generate your guide.</div></div>
+  </div>
+ </section>
+
+ <section id="roblox" class="pane hidden">
+  <div class="card">
+   <h2>Roblox FFlag-style JSON builder</h2>
+   <p class="muted">This exports a JSON template for inspection or compatible PC tooling. Roblox may ignore flags that are not on its current allowlist. It cannot be installed into the PS5 Roblox app.</p>
+   <label for="rbPreset">Template</label><select id="rbPreset"><option value="balanced">Balanced template</option><option value="minimal">Minimal / conservative template</option><option value="custom">Custom empty template</option></select>
+   <label for="rbJson">Edit JSON</label><textarea id="rbJson" spellcheck="false"></textarea>
+   <div class="actions"><button class="primary" id="validateRb">Validate JSON</button><button id="copyRb">Copy JSON</button><button id="downloadRb">Download .json</button></div>
+   <p id="rbStatus" class="muted" aria-live="polite">Template ready. No flags are injected into Roblox.</p>
+  </div>
+  <div class="card"><h3>What works on PS5?</h3><ul><li>Use Roblox's in-game settings where an experience exposes them.</li><li>Use a stable network connection and avoid large downloads while playing.</li><li>Custom FFlag injection, Bloxstrap, and PC client settings are not supported by the retail PS5 app.</li></ul></div>
+ </section>
+
+ <section id="fortnite" class="pane hidden">
+  <div class="grid">
+   <div class="card"><h2>Fortnite potato profile</h2>
+    <p class="muted">Choose a platform to generate an appropriate checklist. PC configuration files are not imported by the PS5 game.</p>
+    <label for="fnPlatform">Platform</label><select id="fnPlatform"><option value="ps5">Retail PS5</option><option value="pc">PC reference profile</option></select>
+    <label for="fnGoal">Goal</label><select id="fnGoal"><option>Maximum supported FPS / responsiveness</option><option>Lowest visual effects available</option><option>Balanced performance</option></select>
+    <button class="primary" id="makeFn">Generate profile</button>
+   </div>
+   <div class="card"><h2>Profile output</h2><div id="fnOutput" class="muted">Choose options and generate a profile.</div></div>
+  </div>
+ </section>
+</main>
+<footer>PS5 Performance Lab · Independent configuration helper · No console modifications</footer>
+<script>
+const $=id=>document.getElementById(id);
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('hidden',p.id!==b.dataset.tab));}));
+const rbTemplates={
+ balanced:{"FFlagDebugGraphicsPreferD3D11":false,"_note":"Illustrative template only. Roblox controls which FastFlags are allowed; unsupported flags may be ignored."},
+ minimal:{"_note":"Conservative empty template. Add only flags documented as currently supported by your Roblox client."},
+ custom:{"_note":"Add documented, currently supported flags here."}
+};
+function setRb(){ $('rbJson').value=JSON.stringify(rbTemplates[$('rbPreset').value],null,2);$('rbStatus').textContent="Template loaded. Verify flag support for the exact Roblox client before use."; }
+$('rbPreset').addEventListener('change',setRb);setRb();
+$('validateRb').onclick=()=>{try{JSON.parse($('rbJson').value);$('rbStatus').textContent="Valid JSON syntax. This does not mean Roblox supports the flags."; }catch(e){$('rbStatus').textContent="Invalid JSON: "+e.message;}};
+async function copyText(s,status){try{await navigator.clipboard.writeText(s);status.textContent="Copied to clipboard.";}catch(e){status.textContent="Clipboard unavailable in this browser. Select and copy the text manually.";}}
+$('copyRb').onclick=()=>copyText($('rbJson').value,$('rbStatus'));
+function download(name,text){const blob=new Blob([text],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);}
+$('downloadRb').onclick=()=>download('roblox-fflag-template.json',$('rbJson').value);
+$('makeGuide').onclick=()=>{
+ let a=[];const d=$('display').value,p=$('priority').value;
+ a.push("<b>Display</b>: Set PS5 Settings → Screen and Video → Video Output → 120 Hz Output to Automatic if your screen supports 120Hz. Set resolution to Automatic; lowering resolution does not guarantee more FPS on PS5.");
+ if(d==="120Hz display")a.push("In Fortnite, enable 120 FPS Mode if available. Use a compatible HDMI connection and display input.");
+ else if(d==="60Hz display")a.push("Your display is limited to 60Hz. A 120 FPS setting will not provide 120Hz display output.");
+ else a.push("Check your monitor/TV specifications and PS5 video output information before selecting 120Hz.");
+ a.push("<b>Game Preset</b>: PS5 Settings → Saved Data and Game/App Settings → Game Presets → Performance Mode (where available).");
+ a.push("<b>Controller</b>: Settings → Accessories → Controller → Communication Method → Use USB Cable, if you play wired.");
+ a.push($('vrr').checked?"<b>VRR</b>: Enable VRR in Screen and Video if your display supports it.":"<b>VRR</b>: Leave VRR off unless your display supports it.");
+ a.push($('lan').checked?"<b>Network</b>: Connect Ethernet and test connection.":"<b>Network</b>: Prefer Ethernet if practical; otherwise use 5GHz Wi‑Fi near the router or 2.4GHz at longer range.");
+ if(p.startsWith("Competitive"))a.push("<b>Priority</b>: Close unused games/apps, pause downloads during matches, and use your display's Game Mode.");
+ $('guide').innerHTML="<ul>"+a.map(x=>"<li>"+x+"</li>").join("")+"</ul>";
+};
+$('makeFn').onclick=()=>{
+ const platform=$('fnPlatform').value,goal=$('fnGoal').value;
+ let html="";
+ if(platform==="ps5"){
+  html="<span class='pill'>PS5-compatible guidance</span><ul><li>Use 120 FPS Mode in Fortnite only if you have a compatible 120Hz display.</li><li>Set PS5 Game Preset to Performance Mode where available.</li><li>Use display Game Mode and disable extra image processing on your TV/monitor.</li><li>Use Ethernet where possible and pause downloads during play.</li><li>PS5 does not expose PC-style scalability files or arbitrary potato graphics settings.</li><li>Fortnite on PS5 is capped at supported console frame-rate modes; this profile cannot unlock uncapped FPS.</li></ul>";
+ }else{
+  html="<span class='pill warn'>PC reference only — not for PS5 import</span><ul><li>In Fortnite Video settings, choose Performance – Lower Graphical Fidelity if available.</li><li>Use a display refresh rate supported by your PC and monitor.</li><li>Lower 3D resolution and graphics quality using in-game settings to trade image clarity for performance.</li><li>Keep graphics drivers current and use the game's official settings.</li><li>Avoid third-party FPS unlockers, anti-cheat bypasses, and untrusted config executables.</li></ul>";
+ }
+ $('fnOutput').innerHTML="<b>"+goal+"</b>"+html;
+};
+</script>
+</body></html>
